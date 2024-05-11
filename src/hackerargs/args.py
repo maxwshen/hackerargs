@@ -51,8 +51,11 @@
 
 from loguru import logger
 import sys
-import argparse, yaml
-from typing import Any, Union
+import os
+from pathlib import Path
+import argparse
+import yaml
+from typing import Any
 import textwrap
 
 
@@ -61,16 +64,6 @@ class GlobalWriteOnceDict:
         self._privatedict = dict()
         self._got_args = False
         self._updated_with_cli = False
-    
-    """
-        Access
-    """
-    def get(self, key: str) -> Any:
-        return self._privatedict[key]
-
-    def __getitem__(self, key: str) -> Any:
-        """ Get with square brackets. Not recommended; use get() instead. """
-        return self.get(key)
 
     def __contains__(self, key: str) -> bool:
         """ Overrides 'in' operator. """
@@ -78,6 +71,12 @@ class GlobalWriteOnceDict:
 
     def __repr__(self) -> str:
         return str(self._privatedict)
+
+    """
+        Access
+    """
+    def get(self, key: str) -> Any:
+        return self._privatedict[key]
 
     def setdefault(self, key: str, default_value: Any) -> Any:
         """ If key is not in args, set args[key] = default_value.
@@ -88,24 +87,11 @@ class GlobalWriteOnceDict:
             self._privatedict[key] = default_value
         return self._privatedict[key]
 
-    def setfirst(self, key: str, value: Any) -> None:
+    def __setfirst(self, key: str, value: Any) -> None:
         """ Requires that key is not in args. Set args[key] = value. """
         assert key not in self._privatedict, 'Cannot overwrite {key}.'
         self._privatedict[key] = value
         return value
-
-    def assert_contains(self, key: str, value_not: str = '') -> bool:
-        assert key in self._privatedict, \
-            f'Error: {key} not in args'
-        assert self.get(key) != value_not, \
-            f'Error: arg value of "{key}" cannot be "{value_not}". ' + \
-            'Specify a different value in yaml or using command line.'
-        return bool(key in self._privatedict)
-
-    def assert_not_in(self, key: str) -> bool:
-        assert key not in self._privatedict, \
-            f'Error: {key} is in args, but assertion expected it to not be'
-        return bool(key not in self._privatedict)
 
     """
         Parsing
@@ -117,10 +103,10 @@ class GlobalWriteOnceDict:
             exit()
         return
 
-    def init_from_yaml(self, default_yaml_fn: str) -> None:
+    def init_from_yaml(self, yaml_file: str) -> None:
         """ Read default typed arguments from yaml file, and set to privatedict.
-            If --options_yaml is specified in CLI args, read from that file.
-            Otherwise, use default_yaml_fn.
+            If --config is specified in CLI args, read from that file.
+            Otherwise, use yaml_file.
             Only callable once.
         """
         if self._got_args or self._updated_with_cli:
@@ -129,10 +115,10 @@ class GlobalWriteOnceDict:
             raise Exception(error)
 
         cli_args = sys.argv
-        if '--options_yaml' in cli_args:
-            yaml_fn = cli_args[cli_args.index('--options_yaml') + 1]
+        if '--config' in cli_args:
+            yaml_fn = cli_args[cli_args.index('--config') + 1]
         else:
-            yaml_fn = default_yaml_fn
+            yaml_fn = yaml_file
 
         logger.info(f'Reading arguments from {yaml_fn} ...')
         with open(yaml_fn) as f:
@@ -158,7 +144,7 @@ class GlobalWriteOnceDict:
 
         if parser is None:
             parser = argparse.ArgumentParser(allow_abbrev = False)
-            parser.add_argument(f'--options_yaml', type = str)
+            parser.add_argument(f'--config', type = str)
         for arg, val in self._privatedict.items():
             parser.add_argument(f'--{arg}', default = val, type = type(val))
 
@@ -180,7 +166,7 @@ class GlobalWriteOnceDict:
             val = unknown[i * 2 + 1]
             assert key[:2] == '--'
             trimmed_key = key[2:]
-            self.setfirst(trimmed_key, self.infer_type(val))
+            self.__setfirst(trimmed_key, self.infer_type(val))
         return
 
     def infer_type(self, val: str) -> int | float | None | bool | str:
@@ -197,46 +183,17 @@ class GlobalWriteOnceDict:
                 return True
             elif val == 'False':
                 return False
-            return val
-
-    def update_with_train_yaml(
-        self, 
-        arg_prefixes: list[str] = ['ft.', 'net.']
-    ) -> None:
-        """ Update predict args with train yaml. Use this when loading a 
-            trained checkpoint, with the training yaml, to ensure that model
-            hyperparameters are correctly set.
-            Seeks args with protected prefixes, default: ft. and net.
-        """
-        assert self._updated_with_cli
-        assert self.get('stages') == 'predict'
-        assert 'train_yaml' in self
-
-        yaml_fn = self.get('train_yaml')
-        has_prefix = lambda key: any(key[:len(pf)] == pf for pf in arg_prefixes)
-
-        logger.info(f'Reading training args from {yaml_fn} ...')
-        with open(yaml_fn) as f:
-            args = yaml.load(f, Loader=yaml.FullLoader)
-
-        for key, val in args.items():
-            if has_prefix(key):
-                self.setfirst(key, val)
-                logger.info(f'\t{key}, {val}')
-        return
+        return val
 
     def save_to_yaml(self, out_yaml_file: str) -> None:
         """ Saves args into yaml file.
-
-            Intended usage accesses args in scripts using
-            param_val = args.setdefault(key, value)
-            which guarantees that args entries are never updated twice.
-            When this implicit contract holds, saving args to a yaml file
-            at the end of a script will let us exactly reproduce its behavior
-            by loading the yaml args and rerunning the script, even if
-            the default values changed in the script. 
+            Create parent folders recursively if needed.
         """
         logger.info(f'Saved args yaml to {out_yaml_file}.')
+        Path(os.path.dirname(out_yaml_file)).mkdir(
+            parents = True, 
+            exist_ok = True
+        )
         with open(out_yaml_file, 'w') as f:
             yaml.dump(self._privatedict, f)
         return
