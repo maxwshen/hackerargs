@@ -58,6 +58,7 @@ from typing import Any, Optional
 import logging
 
 from .strict_bool_yaml import StrictBoolSafeLoader
+from . import argparse_access
 
 logger = logging.getLogger('hackerargs')
 
@@ -226,12 +227,20 @@ class WriteOnceDict:
 
         logger.info('Updating arguments with command-line options ...')
         args_namespace, unknown = parser.parse_known_args()
+        args_dict = vars(args_namespace)
+
+        positional_args = argparse_access.get_positional_keys(parser)
 
         # Update with parsed args
         no_spec = lambda k: f'--{k}' not in sys.argv and f'-{k}' not in sys.argv
-        for key, val in vars(args_namespace).items():
-            if no_spec(key) and key in self._privatedict:
-                # k, v parsed by argparser, but not specified by user,
+        logger.debug(f'argparse found {args_dict.items()=}')
+        for key, val in args_dict.items():
+            if (no_spec(key)
+                and key in self._privatedict
+                and key not in positional_args
+            ):
+                # k, v parsed by argparser, but not specified by user as
+                # optional arg, and not as positional arg,
                 # means default value must have been used
                 logger.info((
                     f'argparse attempting to use default for {key=} '
@@ -251,6 +260,7 @@ class WriteOnceDict:
 
     def __update_with_unknown_cli_args(self, unknown: list[str]) -> None:
         """ Update with unknown CLI args, of form `--{key} {val}. """
+        logger.debug(f'Found {unknown=}')
         if len(unknown) % 2 != 0:
             raise ValueError('Require even number of unknown arguments')
         seen_keys = set()
