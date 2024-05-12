@@ -6,12 +6,13 @@ authors = [
 ]
 description = "Simple config and argument system"
 readme = "README.md"
-requires-python = ">=3.8"
-classifiers = [
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
+dependencies = [
+  'PyYAML'
 ]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
 
 [project.urls]
 Homepage = "https://github.com/maxwshen/hackerargs"
