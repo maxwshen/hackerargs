@@ -3,48 +3,69 @@
 ![Python package testing badge](https://github.com/maxwshen/hackerargs/actions/workflows/python-package.yml/badge.svg)
 ![Supports python 3.9-3.12](https://img.shields.io/badge/python-3.9%20%7C%203.10%20%7C%203.11%20%7C%203.12-blue)
 
-Usage
+**hackerargs** minimizes new lines of code to add a new argument, command-line option,
+or config option anywhere in your codebase.
+Its design enables you to start hacking, prototyping, writing code,
+and focus on experiments without thinking about argument handling.
+By handling arguments for you, you can write cleaner code.
 
 ```python
-
-# do this in any script
+# in your driver script
 from hackerargs import args
 
-# do this anywhere
-value = args.setdefault(key, default_value)
-
+if __name__ == '__main__':
+    args.parse_args()               # parses command-line arguments
+    main()
+    args.save_to_yaml(yaml_file)
 ```
 
-Maintains a global write-once dict args, accessible from other scripts.
+```python
+# in any python script/file, anywhere in your codebase
+from hackerargs import args
 
-Usage
------
-In a python script, import args.
->>> from hackerargs import args
+parameter_value = args.setdefault(key, default_value)
+```
 
-Steps
+**hackerargs** acts as a global write-once-only dict after initialization.
+Hackerargs is built around `value = args.setdefault(key, default_value)`,
+which returns the value of the specified key.
+If the key does not exist, its value is set to default_value.
+setdefault is a standard method on python dicts, albeit relatively unknown.
+Its use in hackerargs ensures that populated args can be saved to file at the end,
+and reloading later for reproducibility.
 
-1 (Optional): Init default args from yaml. Doing this instantiates
-    arguments in dict with automatically inferred types. 
-    A default yaml gives the user an idea of the most important 
-    expected arguments.
->>> args.init_from_yaml('args.yaml')
+### Easy CLI options
 
-# In main script, once:
+```bash
+python train.py --lr 1e-1
+```
 
-2. Parse args from CLI in --arg value format. 
-    If args were init'd from yaml, then types are interpreted accordingly. 
-    Unknown args, or when args were not init'd, infer types using
-    int > float > bool > str.
-    Parsing CLI args supports wandb sweeps.
->>> args.parse_cli_args()
+```python
+from hackerargs import args
 
-3. In other scripts, access using setdefault method.
-    If key is not in args, this sets args[key] = value.
->>> parameter_value = args.setdefault(key, value)
+if __name__ == '__main__':
+    args.parse_args()               # parses command-line arguments
+    lr = args.setdefault('lr', 1e-3)
+    # lr = 1e-1 (type = float), already specified by user on command-line
+```
 
-4. After all code has run
->>> args.save_to_yaml(output_yaml_file)
+
+### Type inference
+
+```bash
+python example.py --none [~,null] --bool [true,false,on,off,yes,no] --int 42 --float 3.14159 --list [LITE,RES_ACID,SUS_DEXT]
+```
+
+```python
+from hackerargs import args
+
+if __name__ == '__main__':
+    args.parse_args()               # parses command-line arguments
+```
+
+```python
+args = {'none': [None, None], 'bool': [True, False, 'on', 'off', 'yes', 'no'], 'int': 42, 'float': 3.14159, 'list': ['LITE', 'RES_ACID', 'SUS_DEXT']}
+```
 
 Design philosophy
 -----------------
