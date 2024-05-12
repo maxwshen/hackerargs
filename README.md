@@ -37,7 +37,7 @@ and reloading later for reproducibility.
 ### Easy CLI options
 
 ```bash
-python train.py --lr 1e-1
+python train.py --lr 1.0e-1
 ```
 
 ```python
@@ -45,15 +45,22 @@ from hackerargs import args
 
 if __name__ == '__main__':
     args.parse_args()               # parses command-line arguments
-    lr = args.setdefault('lr', 1e-3)
-    # lr = 1e-1 (type = float), already specified by user on command-line
+    lr = args.setdefault('lr', 1.0e-3)
 ```
 
+`lr` was specified by the user on the command-line, so:
+
+```python
+args = {'lr': 0.1}
+```
+
+Note that its type is inferred as float.
 
 ### Type inference
 
 ```bash
-python example.py --none [~,null] --bool [true,false,on,off,yes,no] --int 42 --float 3.14159 --list [LITE,RES_ACID,SUS_DEXT]
+python example.py --none [~,null] --bool [true,false,on,off,yes,no] \
+--int 42 --float 3.14159 --list [LITE,RES_ACID,SUS_DEXT]
 ```
 
 ```python
@@ -63,8 +70,13 @@ if __name__ == '__main__':
     args.parse_args()               # parses command-line arguments
 ```
 
+Hackerargs infers types using PyYAML's loader, which follows YAML v1.1.
+The exception is we do *not* infer yes/no/on/off as booleans, which was removed
+in YAML v1.2.
+
 ```python
-args = {'none': [None, None], 'bool': [True, False, 'on', 'off', 'yes', 'no'], 'int': 42, 'float': 3.14159, 'list': ['LITE', 'RES_ACID', 'SUS_DEXT']}
+args = {'none': [None, None], 'bool': [True, False, 'on', 'off', 'yes', 'no'],
+    'int': 42, 'float': 3.14159, 'list': ['LITE', 'RES_ACID', 'SUS_DEXT']}
 ```
 
 Design philosophy
