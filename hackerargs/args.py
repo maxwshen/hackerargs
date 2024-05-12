@@ -128,8 +128,9 @@ class WriteOnceDict:
         maybe_parser = parsers[0] if len(parsers) != 0 else None
 
         # find possible yaml file from --config cli arg
-        if '--config' in sys.argv:
-            cli_yaml = sys.argv[sys.argv.index('--config') + 1]
+        argv = sys.argv
+        if '--config' in argv:
+            cli_yaml = argv[argv.index('--config') + 1]
         else:
             cli_yaml = None
 
@@ -175,7 +176,8 @@ class WriteOnceDict:
         positional_args = argparse_access.get_positional_keys(parser)
 
         # Update with parsed args
-        no_spec = lambda k: f'--{k}' not in sys.argv and f'-{k}' not in sys.argv
+        argv = sys.argv
+        no_spec = lambda k: f'--{k}' not in argv and f'-{k}' not in argv
         logger.debug(f'argparse found {args_dict.items()=}')
         for key, val in args_dict.items():
             if (no_spec(key)

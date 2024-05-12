@@ -1,0 +1,31 @@
+# example
+# line2
+name:
+  # details
+  family: Smith   # very common
+  given: Alice    # one of the siblings
+
+abc:
+  - a     # comment 1
+xyz:
+  a: 1    # comment 2
+  b: 2
+  c: 3
+  d: 4
+  e: 5
+  f: 6 # comment 3
+
+key.with.dot: test
+
+none: [~, null]
+bool: [true, false, on, off]
+int: 42   # comment on int
+float: 3.14159
+list: [LITE, RES_ACID, SUS_DEXT]
+dict: {hp: 13, sp: 5}
+
+default: 'yaml'
+
+default_none: 'something'
+no_default: 'test'
+positional: 'should not be this'
