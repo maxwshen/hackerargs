@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 import argparse
 import yaml
-from typing import Any, Optional
+from typing import Any, Optional, Union
 import logging
 
 from .strict_bool_yaml import StrictBoolSafeLoader
@@ -12,7 +12,7 @@ from . import argparse_access
 logger = logging.getLogger('hackerargs')
 
 
-def yaml_load(stream) -> dict[str, Any] | Any:
+def yaml_load(stream) -> Union[dict[str, Any], Any]:
     """ Parse stream using StrictBoolSafeLoader.
         If stream is yaml-formatted string or file, then returns parsed
         dict[str -> Any] where values have inferred python types.
