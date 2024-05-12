@@ -1,0 +1,18 @@
+[project]
+name = "hackerargs"
+version = "0.0.1"
+authors = [
+  { name = "Max Shen" },
+]
+description = "Simple config and argument system"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/maxwshen/hackerargs"
+Issues = "https://github.com/maxwshen/hackerargs/issues"
