@@ -1,6 +1,6 @@
 # hackerargs
 
-![https://github.com/maxwshen/hackerargs/actions/workflows/python-package.yml/badge.svg]
+![Python package testing badge](https://github.com/maxwshen/hackerargs/actions/workflows/python-package.yml/badge.svg)
 
 Usage
 
