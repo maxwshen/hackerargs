@@ -17,6 +17,7 @@ xyz:
 
 key.with.dot: test
 
+string: text
 none: [~, null]
 bool: [true, false, on, off]
 int: 42   # comment on int
