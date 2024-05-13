@@ -20,8 +20,17 @@ using argparse to build help messages and descriptions of key arguments, and
 sharing YAML config files. 
 
 # Installation
+
+Hackerargs is a pip package and conda package:
+
 ```bash
 pip install hackerargs
+```
+
+or
+```bash
+conda install mxwsn::hackerargs
+conda install -c mxwsn hackerargs
 ```
 
 # Usage
