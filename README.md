@@ -59,6 +59,10 @@ parse_args can be called by itself, or with a YAML config file, or argparse.Argu
 - `args.parse_args(argparse.ArgumentParser())`
 - `args.parse_args(argparse.ArgumentParser(), 'config.yaml')`: The input order doesn't matter. 
 
+parse_args parses `sys.argv` by default, but you can use a custom argv instead:
+- `args.parse_args(..., argv = ['--string', 'text', '--int', '42'])`
+
+
 ### Priority
 1. (Highest priority) ArgumentParser options specified by user
 2. Unknown CLI options (not recognized by ArgumentParser) specified by user. These are parsed in `--{key} {val}` format. If no argparser is given, then all CLI options are parsed this way.
