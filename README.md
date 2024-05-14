@@ -25,8 +25,6 @@ Features
 - Optional integration with argparse
 - Works with wandb sweeps: log config using `wandb.config.update(args)`, and run sweep experiments in CLI `--{key} {val}` format.
 
-Its design lets you focus on coding first. You can rest 
-
 # Installation
 
 Hackerargs is a pip package and conda package:
@@ -62,10 +60,10 @@ parse_args can be called by itself, or with a YAML config file, or argparse.Argu
 - `args.parse_args(argparse.ArgumentParser(), 'config.yaml')`: The input order doesn't matter. 
 
 ### Priority
-1. (Highest priority) argparse'd options specified by user
-2. Unknown CLI options (not recognized by argparser) specified by user, parsed in `--{key} {val}` format. If no argparser is given, then all CLI options are parsed this way.
-3. YAML config. If `--config {yaml_file}` CLI option is given, it is used instead of a yaml file given as input to parse_args() in python.
-4. (Lowest priority) argparse default option values, not specified by user.
+1. (Highest priority) ArgumentParser options specified by user
+2. Unknown CLI options (not recognized by ArgumentParser) specified by user. These are parsed in `--{key} {val}` format. If no argparser is given, then all CLI options are parsed this way.
+3. YAML config. If `--config {yaml_file}` CLI option is given, it is used instead of a yaml file given as input to parse_args() in python. As such, `--config` is a protected CLI option when using hackerargs.
+4. (Lowest priority) ArgumentParser default values for options not specified by user.
 
 As a write-once-only dict, initialized values take priority over runtime values.
 
