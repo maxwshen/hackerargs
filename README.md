@@ -19,6 +19,7 @@ class Model:
 
 - Hackerargs is a global, write-once-only dict. The first setting of each key is final, ensuring exact reproducibility when saving to yaml, and later loading it to rerun your script.
 - We emphasize `val = setdefault(key, default_val)` as a primitive, which returns your key's value if it already exists, and setting it to default_val otherwise. No more fumbling with errors accessing missing keys. Initializing args from CLI or yaml config takes priority over runtime setdefault.
+- Write cleaner code, simplify function parameters, and operate at a higher level of abstraction: no more passing args around, or long function signatures filled with low-level details
 
 Features
 - Values have python types inferred as floats, ints, strings, lists, etc. with PyYAML loader. YAML v1.1 except "on/off/yes/no" are not parsed as booleans
