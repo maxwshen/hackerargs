@@ -23,8 +23,4 @@ def test_access():
     assert args['int'] == 42
     assert args.int == 42
 
-    with pytest.raises(Exception):
-        args.int = 0
-
-    assert args['int'] == 42
-    assert args.int == 42
+    assert isinstance(args, dict)

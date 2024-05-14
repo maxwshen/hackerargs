@@ -27,6 +27,6 @@ dict: {hp: 13, sp: 5}
 
 default: 'yaml'
 
-default_none: 'something'
-no_default: 'test'
+default_none: 'yaml'
+no_default: 'yaml'
 positional: 'should not be this'
