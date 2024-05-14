@@ -1,3 +1,4 @@
+from __future__ import annotations
 import sys
 import os
 from pathlib import Path
@@ -6,7 +7,6 @@ import yaml
 from typing import Any, Optional
 import logging
 from collections.abc import MutableMapping
-from __future__ import annotations
 
 from .strict_bool_yaml import StrictBoolSafeLoader
 from . import argparse_access
