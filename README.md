@@ -16,11 +16,11 @@ class Model:
     def __init__(self):
         self.parameter = args.setdefault(key, default_value)
         # run forth and code with confidence!
-        # value can be taken from CLI or yaml config if provided
+        # value is taken from CLI or yaml config if given
 ```
 
-- Hackerargs is a global, write-once-only dict
-- We emphasize `val = setdefault(key, default_val)` as a primitive, which returns your key's value if it already exists, and also sets it to default_val if missing. No more fumbling with errors accessing missing keys. This means initialized args from CLI or yaml config are used at runtime. Write-once means exact reproducibility rerunning your script by reloading saved yaml config
+- In hackerargs, `args` is a global, write-once-only dict
+- We emphasize `val = args.setdefault(key, default_val)` as a primitive. It returns your key's value if it already exists, and also sets it to default_val if missing. No more fumbling with errors accessing missing keys. Write-once only means initialized args from CLI or yaml config are used at runtime, and exact reproducibility on reruns by reloading saved yaml config
 - Write cleaner code, simplify function parameters, and operate at a higher level of abstraction: no more passing args around, or long function signatures filled with low-level details
 
 Features
