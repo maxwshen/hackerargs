@@ -24,3 +24,5 @@ def test_access():
     assert args.int == 42
 
     assert isinstance(args, dict)
+
+    args.save_to_yaml('test_save.yaml')
