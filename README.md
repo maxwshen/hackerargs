@@ -19,14 +19,14 @@ class Model:
         # value can be taken from CLI or yaml config if provided
 ```
 
-- Hackerargs is a global, write-once-only dict.
-- We emphasize `val = setdefault(key, default_val)` as a primitive, which returns your key's value if it already exists, and also sets it to default_val if missing. No more fumbling with errors accessing missing keys. This means initialized args from CLI or yaml config are used at runtime. Write-once means exact reproducibility rerunning your script by reloading saved yaml config. 
+- Hackerargs is a global, write-once-only dict
+- We emphasize `val = setdefault(key, default_val)` as a primitive, which returns your key's value if it already exists, and also sets it to default_val if missing. No more fumbling with errors accessing missing keys. This means initialized args from CLI or yaml config are used at runtime. Write-once means exact reproducibility rerunning your script by reloading saved yaml config
 - Write cleaner code, simplify function parameters, and operate at a higher level of abstraction: no more passing args around, or long function signatures filled with low-level details
 
 Features
 - Type inference as floats, ints, strings, lists, etc. with PyYAML loader (YAML v1.1), except "on/off/yes/no" are not parsed as booleans
 - Optional integration with argparse
-- Works with wandb sweeps: log config using `wandb.config.update(args)`, and run sweep experiments in CLI `--{key} {val}` format.
+- Works with wandb sweeps: log config using `wandb.config.update(args)`, and run sweep experiments in CLI `--{key} {val}` format
 
 # Installation
 
@@ -55,22 +55,29 @@ if __name__ == '__main__':
     args.save_to_yaml(yaml_file)
 ```
 
-parse_args can be called by itself, or with a YAML config file, or argparse.ArgumentParser:
+parse_args can be called with no arguments:
 
-- `args.parse_args()`
+- `args.parse_args()`: Parse CLI options in `--{key} {val}` format. Then, if `--config {yaml_file}` provided, load from yaml file.
+
+parse_args can also take either a YAML config file, or argparse.ArgumentParser.
+
 - `args.parse_args('config.yaml')`
 - `args.parse_args(argparse.ArgumentParser())`
-- `args.parse_args(argparse.ArgumentParser(), 'config.yaml')`: The input order doesn't matter. 
+- `args.parse_args(argparse.ArgumentParser(), 'config.yaml')`
+- `args.parse_args('config.yaml', argparse.ArgumentParser())`
 
 parse_args parses `sys.argv` by default, but you can use a custom argv instead:
 - `args.parse_args(..., argv = ['--string', 'text', '--int', '42'])`
 
 
 ### Priority
-1. (Highest priority) ArgumentParser options specified by user
-2. Unknown CLI options (not recognized by ArgumentParser) specified by user. These are parsed in `--{key} {val}` format. If no argparser is given, then all CLI options are parsed this way.
-3. YAML config. If `--config {yaml_file}` CLI option is given, it is used instead of a yaml file given as input to parse_args() in python. As such, `--config` is a protected CLI option when using hackerargs.
-4. (Lowest priority) ArgumentParser default values for options not specified by user.
+
+In general, CLI options > yaml config (if provided).
+
+1. (Highest priority) ArgumentParser options specified by user via CLI, if ArgumentParser is given
+2. Unknown CLI options (not recognized by ArgumentParser) specified by user. These are parsed in `--{key} {val}` format. If no ArgumentParser is given, then all CLI options are parsed this way
+3. YAML config. If `--config {yaml_file}` CLI option is given, it is used instead of a yaml file given as input to parse_args() in python. As such, `--config` is a protected CLI option when using hackerargs
+4. (Lowest priority) ArgumentParser default values for options not specified by user via CLI, if ArgumentParser is given
 
 As a write-once-only dict, initialized values take priority over runtime values.
 
