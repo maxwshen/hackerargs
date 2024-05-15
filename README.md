@@ -19,12 +19,12 @@ class Model:
         # value can be taken from CLI or yaml config if provided
 ```
 
-- Hackerargs is a global, write-once-only dict. The first setting of each key is final, ensuring exact reproducibility when saving to yaml, and later loading it to rerun your script.
-- We emphasize `val = setdefault(key, default_val)` as a primitive, which returns your key's value if it already exists, and setting it to default_val otherwise. No more fumbling with errors accessing missing keys. Initializing args from CLI or yaml config takes priority over runtime setdefault.
+- Hackerargs is a global, write-once-only dict.
+- We emphasize `val = setdefault(key, default_val)` as a primitive, which returns your key's value if it already exists, and also sets it to default_val if missing. No more fumbling with errors accessing missing keys. This means initialized args from CLI or yaml config are used at runtime. Write-once means exact reproducibility rerunning your script by reloading saved yaml config. 
 - Write cleaner code, simplify function parameters, and operate at a higher level of abstraction: no more passing args around, or long function signatures filled with low-level details
 
 Features
-- Values have python types inferred as floats, ints, strings, lists, etc. with PyYAML loader. YAML v1.1 except "on/off/yes/no" are not parsed as booleans
+- Type inference as floats, ints, strings, lists, etc. with PyYAML loader (YAML v1.1), except "on/off/yes/no" are not parsed as booleans
 - Optional integration with argparse
 - Works with wandb sweeps: log config using `wandb.config.update(args)`, and run sweep experiments in CLI `--{key} {val}` format.
 
