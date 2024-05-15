@@ -6,7 +6,7 @@
 
 **hackerargs** minimizes new lines of code to add a configurable argument anywhere in your codebase, so you can focus on coding.
 
-Hackerargs is for everyone, but is especially designed for researchers using config-heavy ML libraries like pytorch, coding largely from scratch, in solo-developer or single-user repos, and running experiments varying CLI args with wandb.
+Hackerargs is for everyone, but is especially designed for researchers using config-heavy ML libraries like pytorch, coding largely from scratch in solo or small-team repos, and running experiments varying CLI args with wandb.
 
 ```python
 # in any python file in your codebase
