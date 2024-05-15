@@ -247,7 +247,7 @@ class WriteOnceDict(MutableMapping, dict):
             exist_ok = True
         )
         with open(out_yaml_file, 'w') as f:
-            yaml.dump(self._privatedict, f)
+            yaml.dump(self, f)
         logger.info(f'Saved hackerargs to {out_yaml_file}.')
         return
 
