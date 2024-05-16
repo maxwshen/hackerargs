@@ -1,10 +1,10 @@
 [project]
 name = "hackerargs"
-version = "1.1.0"
+version = "1.1.1"
 authors = [
   { name = "Max Shen" },
 ]
-description = "Simple config and argument system"
+description = "Easy config system, minimizing new lines of code"
 readme = "README.md"
 dependencies = [
   'PyYAML'
