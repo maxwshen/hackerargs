@@ -4,9 +4,9 @@
 ![Supports python 3.9-3.12](https://img.shields.io/badge/python-3.9%20%7C%203.10%20%7C%203.11%20%7C%203.12-blue)
 
 
-**hackerargs** minimizes new lines of code to add a configurable argument anywhere in your codebase, so you can focus on coding.
+**hackerargs** is the easiest way to add configurable options anywhere in your codebase.
 
-Hackerargs is for everyone, but is especially designed for researchers using config-heavy ML libraries like pytorch, coding largely from scratch in solo or small-team repos, and running experiments varying CLI args with wandb.
+Hackerargs' design inspiration is researchers using config-heavy ML libraries like pytorch, coding largely from scratch in solo or small-team repos, and running many experiments varying configs.
 
 ```python
 # in any python file in your codebase
