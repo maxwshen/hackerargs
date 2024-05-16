@@ -4,7 +4,7 @@
 ![Supports python 3.9-3.12](https://img.shields.io/badge/python-3.9%20%7C%203.10%20%7C%203.11%20%7C%203.12-blue)
 
 
-**hackerargs** is the easiest way to add configurable options anywhere in your codebase.
+**hackerargs** lets you add configurable options anywhere in your codebase with just 1 line of code, so you can focus on coding and experimenting.
 
 Hackerargs' design inspiration is researchers using config-heavy ML libraries like pytorch, coding largely from scratch in solo or small-team repos, and running many experiments varying configs.
 
