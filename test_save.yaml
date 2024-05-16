@@ -1,0 +1,35 @@
+abc:
+- a
+bool:
+- true
+- false
+- on
+- off
+default: yaml
+default_none: yaml
+dict:
+  hp: 13
+  sp: 5
+float: 3.14159
+int: 42
+key.with.dot: test
+list:
+- LITE
+- RES_ACID
+- SUS_DEXT
+name:
+  family: Smith
+  given: Alice
+no_default: yaml
+none:
+- null
+- null
+positional: should not be this
+string: text
+xyz:
+  a: 1
+  b: 2
+  c: 3
+  d: 4
+  e: 5
+  f: 6
